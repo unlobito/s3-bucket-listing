@@ -2,10 +2,7 @@ if (typeof AUTO_TITLE != 'undefined' && AUTO_TITLE == true) {
   document.title = location.hostname;
 }
 
-if (typeof S3_REGION != 'undefined') {
-  var BUCKET_URL = 'http://' + location.hostname + '.' + S3_REGION + '.amazonaws.com'; // e.g. just 's3' for us-east-1 region
-  var BUCKET_WEBSITE_URL = location.protocol + '//' + location.hostname;
-}
+var BUCKET_WEBSITE_URL = location.protocol + '//' + location.hostname;
 
 if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
   var S3BL_IGNORE_PATH = false;
@@ -13,14 +10,6 @@ if (typeof S3BL_IGNORE_PATH == 'undefined' || S3BL_IGNORE_PATH != true) {
 
 if (typeof BUCKET_URL == 'undefined') {
   var BUCKET_URL = location.protocol + '//' + location.hostname;
-}
-
-if (typeof BUCKET_NAME != 'undefined') {
-  // if bucket_url does not start with bucket_name,
-  // assume path-style url
-  if (!~BUCKET_URL.indexOf(location.protocol + '//' + BUCKET_NAME)) {
-    BUCKET_URL += '/' + BUCKET_NAME;
-  }
 }
 
 if (typeof BUCKET_WEBSITE_URL == 'undefined') {

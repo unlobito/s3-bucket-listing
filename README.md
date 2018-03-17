@@ -22,13 +22,11 @@ Copy these 3 lines into the HTML file where you want the listing to show up:
     <!-- the JS variables for the listing -->
     <script type="text/javascript">
       // var S3BL_IGNORE_PATH = true;
-      // var BUCKET_NAME = 'BUCKET';
       // var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
       // var S3B_ROOT_DIR = 'SUBDIR_L1/SUBDIR_L2/';
       // var S3B_SORT = 'DEFAULT';
       // var EXCLUDE_FILE = 'index.html';
       // var AUTO_TITLE = true;
-      // var S3_REGION = 's3'; // for us-east-1
     </script>
 
     <!-- the JS to the do the listing -->
@@ -61,53 +59,13 @@ Setting this to true will cause URL navigation to be in this form:
 
 Valid options = `''` (default) or your _bucket URL_, e.g.
 
-`https://BUCKET.s3-REGION.amazonaws.com` (both http & https are valid)
+`https://s3-REGION.amazonaws.com/BUCKET` (both http & https are valid)
 
-- Do __NOT__ put a trailing '/', e.g. `https://BUCKET.s3-REGION.amazonaws.com/`
-- Do __NOT__ put S3 website URL, e.g. `https://BUCKET.s3-website-REGION.amazonaws.com`
+- Do __NOT__ put a trailing '/', e.g. `https://s3-REGION.amazonaws.com/BUCKET`
+- Do __NOT__ put S3 website URL, e.g. `https://s3-website-REGION.amazonaws.com/BUCKET`
 
 This variable tells the script where your bucket XML listing is, and where the files are.
 If the variable is left empty, the script will use the same hostname as the _index.html_.
-
-
-#### `BUCKET_NAME` variable
-
-Valid options = `''` (default) or your _bucket name_, e.g.
-
-`BUCKET`
-
-This option is designed to support access to S3 buckets in non-website mode,
-via both path-style and virtualhost-style access urls simultaneously, from the
-same index.html file. 
-
-> NOTE: It is *not* recommended to use both BUCKET_URL and BUCKET_NAME in the
-same index.html file.
-
-See the [Amazon
-Documentation](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html)
-for details on the different url access formats.
-
-The tables below attempt to highlight how BUCKET_NAME affects configuration and
-use cases.
-
-*Without using BUCKET_NAME:*
-
-Configuration | Result | Link
------------- | ----------- | --------
-bucket_url is `undefined`; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-null.html)
-bucket_url is `undefined`; access url is path-based | Error (Ok, expected) | [link](http://s3.amazonaws.com/listing-test/index-null.html)
-bucket_url is virtualhost-based; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-vh.html)
-bucket_url is virtualhost-based; access url is path-based | Error (Fail) | [link](http://s3.amazonaws.com/listing-test/index-vh.html)
-bucket_url is path-based; access url is virtualhost-based | Error (Fail) | [link](http://listing-test.s3.amazonaws.com/index-path.html)
-bucket_url is path-based; access url is path-based | Success | [link](http://s3.amazonaws.com/listing-test/index-path.html)
-
-*Using BUCKET_NAME to address the two failing configurations from above:*
-
-Configuration | Result | Link
------------- | ----------- | --------
-bucket_name is set; access url is virtualhost-based | Success | [link](http://listing-test.s3.amazonaws.com/index-bucketname.html)
-bucket_name is set; access url is path-based | Success | [link](http://s3.amazonaws.com/listing-test/index-bucketname.html)
-
 
 #### `S3B_ROOT_DIR` variable
 
@@ -154,18 +112,6 @@ This variable is optional.  It allows you to exclude a file (e.g. index.html) fr
 This variable is optional.  It allows you to automatically set the title.
 
 
-### `S3_REGION` variable
-
-This variable is optional.  It allows you specify the S3 region that the bucket is in so that the BUCKET_URL and BUCKET_WEBSITE_URL variables will be configured automatcially.
-
-The 'us-east-1' region is unique and would require this variable be set to 's3' for a bucket in that region, buckets in other regions would just have this set to 's3-' + their region name (e.g. 's3-eu-west-1').
-
-E.g. setting S3_REGION to 's3' for a bucket named 'www.example.com' in the us-east-1 region would automatically set:
-
-  BUCKET_URL = 'http://www.example.com.s3.amazonaws.com'
-  BUCKET_WEBSITE_URL = 'http://www.example.com'
-
-
 ## Four Valid Configurations
 
 1. Embed into your website
@@ -181,7 +127,7 @@ Mandatory settings:
 
 ```
       var S3BL_IGNORE_PATH = true;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://s3-REGION.amazonaws.com/BUCKET';
 ```
 
 Copy the code into whatever file you want to act as your listing page.
@@ -193,7 +139,7 @@ Mandatory settings:
 
 ```
       var S3BL_IGNORE_PATH = false;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://s3-REGION.amazonaws.com/BUCKET';
 ```
 
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
@@ -223,7 +169,7 @@ Note that US east region is **different** in that the S3 bucket endpoint does no
 Mandatory settings:
 ```
       var S3BL_IGNORE_PATH = true;
-      var BUCKET_URL = 'https://BUCKET.s3-REGION.amazonaws.com';
+      var BUCKET_URL = 'https://s3-REGION.amazonaws.com/BUCKET';
 ```
 - Enable website hosting under `Static website hosting` in your S3 bucket settings.
 - Enter `index.html` as your `Index Document` (Error Document is not required).
@@ -241,17 +187,17 @@ Mandatory settings:
 ```
 
 - Put _index.html_ in your bucket.
-- Access the bucket via either the virtualhost- or path-style url:
+- Access the bucket via the path-style url:
   - https://BUCKET.s3-REGION.amazonaws.com
   - https://s3-REGION.amazonaws.com/BUCKET
 
 
 ## S3 website bucket permissions
 
-You must setup the S3 website bucket to allow public read access. 
+You must setup the S3 website bucket to allow public read access.
 
 * Grant `Everyone` the `List` and `View` permissions:
-![List & View permissions](https://f.cloud.github.com/assets/227505/2409362/46c90dbe-aaad-11e3-9dee-10e967763770.png) 
+![List & View permissions](https://f.cloud.github.com/assets/227505/2409362/46c90dbe-aaad-11e3-9dee-10e967763770.png)
  * Alternatively you can assign the following bucket policy if policies are your thing:
 
 ```
