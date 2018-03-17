@@ -235,7 +235,7 @@ function prepareTable(info) {
       item.href = item.href.replace(/%2F/g, '/');
     }
     var row = renderRow(item, cols);
-    if (typeof EXCLUDE_FILE == 'undefined' || EXCLUDE_FILE != item.Key)
+    if (typeof EXCLUDE_FILE == 'undefined' || EXCLUDE_FILE.split(",").indexOf(item.Key) == -1)
       content.push(row + '\n');
   });
 
